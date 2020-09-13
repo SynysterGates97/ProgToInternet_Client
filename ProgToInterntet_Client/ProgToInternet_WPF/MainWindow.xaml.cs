@@ -22,50 +22,52 @@ namespace ProgToInternet_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        static IPAddress serverIp;
-        static int serverPort = 8000;
-        static IPEndPoint serverIpEndPoint;
-
-        static Socket connectionSocket = new Socket(AddressFamily.InterNetwork,
-                                                SocketType.Stream,
-                                                ProtocolType.Tcp);
+        Client _client;
         public MainWindow()
         {
-            serverIp = new IPAddress(new byte[] { 0, 0, 0, 0});
-            serverIpEndPoint = new IPEndPoint(serverIp, serverPort);
+            _client = new Client();
             InitializeComponent();
         }
         private void connectButton_Click_1(object sender, RoutedEventArgs e)
         {
             try 
             {
-                string stringIp = textBoxIP.Text;
-                
-
-                serverIp = IPAddress.Parse(stringIp);
-
-                connectionSocket
-                connectionSocket.Connect(serverIpEndPoint);
-
-                MessageBox.Show(serverIp.ToString());
+                _client.ServerIp = textBoxIP.Text;
+                if(_client.ConnectSocket())
+                {
+                    string timeString = DateTime.Now.ToString();
+                    //TODO: не позорься, сделай формат
+                    logListBox.Items.Add("["+timeString + "]: " + " connected to server " + _client.ServerIp.ToString());
+                }
             }
             catch(Exception E)
             {
                 MessageBox.Show("BREAK");
                 MessageBox.Show(E.Message.ToString());
             }
-            
+
         }
 
         private void sendButton_Click(object sender, RoutedEventArgs e)
         {
-            string messageToServer = textBox1.Text;
-            connectionSocket.Send(Encoding.Unicode.GetBytes(messageToServer));
-
+            byte[] messageToServer = Encoding.Unicode.GetBytes(textBox1.Text);
             byte[] rxBuf = new byte[1024];
-            connectionSocket.Receive(rxBuf);
 
-            Console.WriteLine("Response from server: {0}", Encoding.Unicode.GetString(rxBuf));
+            if(_client.SendAndGetResponse(ref messageToServer, ref rxBuf))
+            {
+                //TODO: не позорься, сделай формат
+                
+                string logString = "[" + DateTime.Now.ToString() + "]: " + " \"" + textBox1.Text +
+                    "\"" + " is sent to " + _client.ServerIp.ToString();
+                logListBox.Items.Add(logString);
+
+                logString = "[" + DateTime.Now.ToString() + "]: " + " response from " + _client.ServerIp.ToString() +
+                    "\"" + Encoding.Unicode.GetString(rxBuf) + "\"";
+                logListBox.Items.Add(logString);
+
+
+            }
+            _client.CloseSocket();
         }
     }
 }
