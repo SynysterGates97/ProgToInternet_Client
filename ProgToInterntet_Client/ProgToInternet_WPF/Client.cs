@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using System.Windows;
-
 using System.ComponentModel;
+
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProgToInternet_WPF
 {
@@ -77,13 +79,19 @@ namespace ProgToInternet_WPF
         {
             try
             {
-                _connectionSocket = new Socket(AddressFamily.InterNetwork,
-                                               SocketType.Stream,
-                                               ProtocolType.Tcp);
                 if (!_connectionSocket.Connected)
                 {
+                    _connectionSocket = new Socket(AddressFamily.InterNetwork,
+                                               SocketType.Stream,
+                                               ProtocolType.Tcp);
+
+                    _connectionSocket.ReceiveTimeout = 10;
                     _connectionSocket.Connect(_serverIpEndPoint);
                     return true;
+                }
+                else
+                {
+                    MessageBox.Show("Already connected");
                 }
 
                 return false;

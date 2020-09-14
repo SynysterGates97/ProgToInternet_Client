@@ -131,3 +131,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 _NCrunch*
+ProgToInterntet_Client/.vs/ProgToInternet_WPF/v16/Server/sqlite3/storage.ide-shm
+ProgToInterntet_Client/.vs/ProgToInternet_WPF/v16/Server/sqlite3/storage.ide-wal
