@@ -28,6 +28,11 @@ namespace ProgToInternet_WPF
             _client = new Client();
             InitializeComponent();
         }
+
+        public string GetDateWithLogFormat()
+        {
+            return String.Format("[{0:s}]:", DateTime.Now.ToString());
+        }
         private void connectButton_Click_1(object sender, RoutedEventArgs e)
         {
             try 
@@ -55,19 +60,53 @@ namespace ProgToInternet_WPF
 
             if(_client.SendAndGetResponse(ref messageToServer, ref rxBuf))
             {
-                //TODO: не позорься, сделай формат
-                
-                string logString = "[" + DateTime.Now.ToString() + "]: " + " \"" + textBox1.Text +
-                    "\"" + " is sent to " + _client.ServerIp.ToString();
+                string logString = String.Format("{0:s} \"{1:s}\" is sent to {2:s}", GetDateWithLogFormat(), textBox1.Text, _client.ServerIp.ToString());
+
                 logListBox.Items.Add(logString);
 
-                logString = "[" + DateTime.Now.ToString() + "]: " + " response from " + _client.ServerIp.ToString() +
-                    "\"" + Encoding.Unicode.GetString(rxBuf) + "\"";
+                logString = String.Format("{0:s} response from {2:s} is \"{1:s}\"", GetDateWithLogFormat(), textBox1.Text, _client.ServerIp.ToString());
                 logListBox.Items.Add(logString);
 
 
             }
             _client.CloseSocket();
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            string logString = String.Format("{0:s} Начата процедура поиска сервера ", GetDateWithLogFormat());
+            logListBox.Items.Add(logString);
+
+            Client findServerClient = new Client(8000) { ServerIp = HackIpServerTextBox.Text };
+
+            if (findServerClient.ServerIp != null)
+            {
+                string[] ipOctetsStr = findServerClient.ServerIp.Split('.');
+
+                int variableOctet = Convert.ToInt32(ipOctetsStr[3]);
+
+
+                for (int i = variableOctet; i < 256; i++)
+                {
+                    string searchIpServerString = String.Format("{0:s}.{1:s}.{2:s}.{3:D}", ipOctetsStr[0], ipOctetsStr[1], ipOctetsStr[2], variableOctet);
+                    findServerClient.ServerIp = searchIpServerString;
+
+                    if (findServerClient.ConnectSocket())
+                    {
+                        logString = String.Format("{0:s} tried ip {1:s} - FOUND!", GetDateWithLogFormat(), searchIpServerString);
+                        logListBox.Items.Add(logString);
+
+                        break;
+                    }
+                    else
+                    {
+                        logString = String.Format("{0:s} tried ip {1:s} - fail!", GetDateWithLogFormat(), searchIpServerString);
+                        logListBox.Items.Add(logString);
+                    }
+                    
+                }
+            }
+
         }
     }
 }

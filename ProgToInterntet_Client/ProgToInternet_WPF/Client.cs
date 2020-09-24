@@ -85,20 +85,21 @@ namespace ProgToInternet_WPF
                                                SocketType.Stream,
                                                ProtocolType.Tcp);
 
-                    _connectionSocket.ReceiveTimeout = 10;
+                    _connectionSocket.ReceiveTimeout = 1;
+                    _connectionSocket.SendTimeout = 500;
                     _connectionSocket.Connect(_serverIpEndPoint);
                     return true;
                 }
                 else
                 {
-                    MessageBox.Show("Already connected");
+                    //MessageBox.Show("Already connected");
                 }
 
                 return false;
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message.ToString());
+               // MessageBox.Show(e.Message.ToString());
                 return false;
             }
             
