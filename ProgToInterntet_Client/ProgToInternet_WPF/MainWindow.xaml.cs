@@ -55,7 +55,7 @@ namespace ProgToInternet_WPF
 
         private void sendButton_Click(object sender, RoutedEventArgs e)
         {
-            byte[] messageToServer = Encoding.Unicode.GetBytes(textBox1.Text);
+            byte[] messageToServer = Encoding.UTF8.GetBytes(textBox1.Text);
             byte[] rxBuf = new byte[1024];
 
             if(_client.SendAndGetResponse(ref messageToServer, ref rxBuf))
@@ -86,17 +86,21 @@ namespace ProgToInternet_WPF
                 int variableOctet = Convert.ToInt32(ipOctetsStr[3]);
 
 
-                for (int i = variableOctet; i < 256; i++)
+                for (int i = 0; i < 256; i++)
                 {
-                    string searchIpServerString = String.Format("{0:s}.{1:s}.{2:s}.{3:D}", ipOctetsStr[0], ipOctetsStr[1], ipOctetsStr[2], variableOctet);
+                    if (i == 200)
+                    {
+                        int a = 5;
+                    }
+                    string searchIpServerString = String.Format("{0:s}.{1:s}.{2:s}.{3:D}", ipOctetsStr[0], ipOctetsStr[1], ipOctetsStr[2], i);
                     findServerClient.ServerIp = searchIpServerString;
 
-                    if (findServerClient.ConnectSocket())
+                    if (findServerClient.TryPing(searchIpServerString,8000,100))
                     {
                         logString = String.Format("{0:s} tried ip {1:s} - FOUND!", GetDateWithLogFormat(), searchIpServerString);
                         logListBox.Items.Add(logString);
 
-                        break;
+                        //break;
                     }
                     else
                     {

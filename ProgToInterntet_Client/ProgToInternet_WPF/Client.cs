@@ -39,6 +39,30 @@ namespace ProgToInternet_WPF
             _serverIpEndPoint = new IPEndPoint(_serverIp, _serverPort);
         }
 
+        public bool TryPing(string strIpAddress, int intPort, int nTimeoutMsec)
+        {
+            Socket socket = null;
+            try
+            {
+                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, false);
+
+
+                IAsyncResult result = socket.BeginConnect(strIpAddress, intPort, null, null);
+                bool success = result.AsyncWaitHandle.WaitOne(nTimeoutMsec, true);
+
+                return socket.Connected;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                if (null != socket)
+                    socket.Close();
+            }
+        }
         public int ServerPort
         {
             get
@@ -85,21 +109,21 @@ namespace ProgToInternet_WPF
                                                SocketType.Stream,
                                                ProtocolType.Tcp);
 
-                    _connectionSocket.ReceiveTimeout = 1;
-                    _connectionSocket.SendTimeout = 500;
+                    //_connectionSocket.ReceiveTimeout = 1;
+                    //_connectionSocket.SendTimeout = 500;
                     _connectionSocket.Connect(_serverIpEndPoint);
                     return true;
                 }
                 else
                 {
-                    //MessageBox.Show("Already connected");
+                    MessageBox.Show("Already connected");
                 }
 
                 return false;
             }
             catch (Exception e)
             {
-               // MessageBox.Show(e.Message.ToString());
+                MessageBox.Show(e.Message.ToString());
                 return false;
             }
             
