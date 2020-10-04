@@ -59,7 +59,9 @@ namespace ProgToInternet_WPF
                     if (TryPing(searchIpServerString, 8000, 100))
                     {
                         string logString = String.Format("tried ip {0:s} - FOUND!", searchIpServerString);
+
                         loger.Print(logString);
+
 
                         //break;
                     }

@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProgToInternet_WPF
 {
@@ -41,7 +43,6 @@ namespace ProgToInternet_WPF
                 if(_client.ConnectSocket())
                 {
                     string timeString = DateTime.Now.ToString();
-                    //TODO: не позорься, сделай формат
                     logListBox.Items.Add("["+timeString + "]: " + " connected to server " + _client.ServerIp.ToString());
                 }
             }
@@ -74,9 +75,11 @@ namespace ProgToInternet_WPF
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            string logString = String.Format("{0:s} Начата процедура поиска сервера ", GetDateWithLogFormat());
-            logListBox.Items.Add(logString);
+            MessageBox.Show("Время подбора около 30 секунд. Нажимте \"ОК\"");
 
+            string logString = String.Format("{0:s} Начата процедура поиска сервера - Интерфейс заблокирован на ~30 сек", GetDateWithLogFormat());
+            logListBox.Items.Add(logString);
+            
             Client findServerClient = new Client(logListBox, 8000) { ServerIp = HackIpServerTextBox.Text };
 
             findServerClient.FindServer();
