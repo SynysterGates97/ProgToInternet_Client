@@ -25,7 +25,7 @@ namespace ProgToInternet_WPF
         Client _client;
         public MainWindow()
         {
-            _client = new Client();
+            _client = new Client(logListBox);
             InitializeComponent();
         }
 
@@ -77,40 +77,9 @@ namespace ProgToInternet_WPF
             string logString = String.Format("{0:s} Начата процедура поиска сервера ", GetDateWithLogFormat());
             logListBox.Items.Add(logString);
 
-            Client findServerClient = new Client(8000) { ServerIp = HackIpServerTextBox.Text };
+            Client findServerClient = new Client(logListBox, 8000) { ServerIp = HackIpServerTextBox.Text };
 
-            if (findServerClient.ServerIp != null)
-            {
-                string[] ipOctetsStr = findServerClient.ServerIp.Split('.');
-
-                int variableOctet = Convert.ToInt32(ipOctetsStr[3]);
-
-
-                for (int i = 0; i < 256; i++)
-                {
-                    if (i == 200)
-                    {
-                        int a = 5;
-                    }
-                    string searchIpServerString = String.Format("{0:s}.{1:s}.{2:s}.{3:D}", ipOctetsStr[0], ipOctetsStr[1], ipOctetsStr[2], i);
-                    findServerClient.ServerIp = searchIpServerString;
-
-                    if (findServerClient.TryPing(searchIpServerString,8000,100))
-                    {
-                        logString = String.Format("{0:s} tried ip {1:s} - FOUND!", GetDateWithLogFormat(), searchIpServerString);
-                        logListBox.Items.Add(logString);
-
-                        //break;
-                    }
-                    else
-                    {
-                        logString = String.Format("{0:s} tried ip {1:s} - fail!", GetDateWithLogFormat(), searchIpServerString);
-                        logListBox.Items.Add(logString);
-                    }
-                    
-                }
-            }
-
+            findServerClient.FindServer();
         }
     }
 }

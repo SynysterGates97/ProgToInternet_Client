@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Windows;
 using System.ComponentModel;
-
+using System.Windows.Controls;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,6 +16,7 @@ namespace ProgToInternet_WPF
     class Client : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        Loger loger;
         protected void OnPropertyChanged(string name = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -27,8 +28,10 @@ namespace ProgToInternet_WPF
 
         Socket _connectionSocket;
 
-        public Client(int serverPort = 8000)
+        public Client(ListBox logListBox, int serverPort = 8000)
         {
+            loger = new Loger(logListBox);
+
             _serverPort = serverPort;
             _connectionSocket = new Socket(AddressFamily.InterNetwork,
                                                SocketType.Stream,
@@ -37,6 +40,37 @@ namespace ProgToInternet_WPF
             _serverIp = new IPAddress(new byte[] { 0, 0, 0, 0 });
 
             _serverIpEndPoint = new IPEndPoint(_serverIp, _serverPort);
+        }
+
+        //метод не сильно связан с остальным классом, стоит доработать
+        public void FindServer()
+        {
+            if (ServerIp != null)
+            {
+                string[] ipOctetsStr = ServerIp.Split('.');
+
+                int variableOctet = Convert.ToInt32(ipOctetsStr[3]);
+
+                for (int i = 0; i < 255; i++)
+                {
+                    string searchIpServerString = String.Format("{0:s}.{1:s}.{2:s}.{3:D}", ipOctetsStr[0], ipOctetsStr[1], ipOctetsStr[2], i);
+                    ServerIp = searchIpServerString;
+
+                    if (TryPing(searchIpServerString, 8000, 100))
+                    {
+                        string logString = String.Format("tried ip {0:s} - FOUND!", searchIpServerString);
+                        loger.Print(logString);
+
+                        //break;
+                    }
+                    else
+                    {
+                        string logString = String.Format("tried ip {0:s} - fail!", searchIpServerString);
+                        loger.Print(logString);
+                    }
+
+                }
+            }
         }
 
         public bool TryPing(string strIpAddress, int intPort, int nTimeoutMsec)
