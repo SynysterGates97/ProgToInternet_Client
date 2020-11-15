@@ -97,13 +97,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\tele.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\display.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\tumb.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\elec.jpg" />
