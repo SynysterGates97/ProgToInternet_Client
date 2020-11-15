@@ -40,15 +40,13 @@ namespace ProgToInternet_WPF
             try 
             {
                 _client.ServerIp = textBoxIP.Text;
-                if(_client.ConnectSocket())
-                {
-                    string timeString = DateTime.Now.ToString();
-                    logListBox.Items.Add("["+timeString + "]: " + " connected to " + _client.ServerIp.ToString());
-                }
+
+                string timeString = DateTime.Now.ToString();
+
+                logListBox.Items.Add("["+timeString + "]: " + " set server " + _client.ServerIp.ToString());
             }
             catch(Exception E)
             {
-                MessageBox.Show("BREAK");
                 MessageBox.Show(E.Message.ToString());
             }
 
@@ -59,22 +57,29 @@ namespace ProgToInternet_WPF
             byte[] messageToServer = Encoding.UTF8.GetBytes(textBox1.Text);
             byte[] rxBuf = new byte[1024];
 
-            if(_client.SendAndGetResponse(ref messageToServer, ref rxBuf))
+            try
             {
-                string logString = String.Format("{0:s} \"{1:s}\" >> {2:s}", GetDateWithLogFormat(), textBox1.Text, _client.ServerIp.ToString());
+                if (_client.ConnectSocket() && _client.SendAndGetResponse(ref messageToServer, ref rxBuf))
+                {
+                    string logString = String.Format("{0:s} \"{1:s}\" >> {2:s}", GetDateWithLogFormat(), textBox1.Text, _client.ServerIp.ToString());
 
-                logListBox.Items.Add(logString);
+                    logListBox.Items.Add(logString);
 
-                string serverResponse = Encoding.UTF8.GetString(rxBuf, 0, rxBuf.Count());
+                    string serverResponse = Encoding.UTF8.GetString(rxBuf, 0, rxBuf.Count());
 
-                serverResponse = serverResponse.Substring(0, serverResponse.IndexOf('\0'));
+                    serverResponse = serverResponse.Substring(0, serverResponse.IndexOf('\0'));
 
-                logString = String.Format("{0:s} {1:s} << {2:s}", GetDateWithLogFormat(), serverResponse, _client.ServerIp.ToString());
-                logListBox.Items.Add(logString);
+                    logString = String.Format("{0:s} \"{1:s}\" << {2:s}", GetDateWithLogFormat(), serverResponse, _client.ServerIp.ToString());
+                    logListBox.Items.Add(logString);
 
 
+                }
+                _client.CloseSocket();
             }
-            _client.CloseSocket();
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
     }
