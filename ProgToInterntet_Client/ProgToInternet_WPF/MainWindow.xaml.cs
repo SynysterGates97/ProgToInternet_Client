@@ -65,7 +65,9 @@ namespace ProgToInternet_WPF
 
                 logListBox.Items.Add(logString);
 
-                logString = String.Format("{0:s} response from {2:s} is \"{1:s}\"", GetDateWithLogFormat(), textBox1.Text, _client.ServerIp.ToString());
+                string serverResponse = Encoding.UTF8.GetString(rxBuf, 0, rxBuf.Count());
+
+                logString = String.Format("{0:s} response from {2:s} is \"{1:s}\"", GetDateWithLogFormat(), serverResponse, _client.ServerIp.ToString());
                 logListBox.Items.Add(logString);
 
 
