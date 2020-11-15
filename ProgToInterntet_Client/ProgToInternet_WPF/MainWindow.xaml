@@ -15,10 +15,38 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="8*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="connectButton" Content="Connect" HorizontalAlignment="Left" Margin="135,110,0,0" VerticalAlignment="Top" Width="71" Height="23" Click="connectButton_Click_1"/>
-        <TextBox x:Name="textBoxIP" HorizontalAlignment="Left" Height="23" Margin="19,110,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="112"/>
-        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="23" Margin="19,138,0,0" TextWrapping="Wrap" Text="Запрос" VerticalAlignment="Top" Width="112"/>
-        <Button x:Name="sendButton" Content="Send" HorizontalAlignment="Left" Margin="135,138,0,0" VerticalAlignment="Top" Width="71" Height="23" Click="sendButton_Click"/>
+        <Button x:Name="connectButton" Content="Connect" HorizontalAlignment="Left" Margin="135,11,0,0" VerticalAlignment="Top" Width="71" Height="23" Click="connectButton_Click_1" BorderBrush="White" Foreground="White">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF336C12" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <TextBox x:Name="textBoxIP" HorizontalAlignment="Left" Height="23" Margin="19,11,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="112" Foreground="White">
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF3C702C" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
+        <TextBox x:Name="textBox1" HorizontalAlignment="Left" Height="23" Margin="19,39,0,0" TextWrapping="Wrap" Text="Запрос" VerticalAlignment="Top" Width="112" BorderBrush="White" Foreground="White">
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF10AA09" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
+        <Button x:Name="sendButton" Content="Send" HorizontalAlignment="Left" Margin="135,39,0,0" VerticalAlignment="Top" Width="71" Height="23" Click="sendButton_Click" BorderBrush="White" Foreground="White">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF336C12" Offset="1"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
         <ListBox x:Name="logListBox" Margin="10,11,10,10" Grid.Column="1" FontSize="18" FontFamily="Consolas" TextOptions.TextHintingMode="Animated" TextOptions.TextFormattingMode="Display">
             <ListBox.Background>
                 <ImageBrush ImageSource="Images/display.png"/>

@@ -40,63 +40,6 @@ namespace ProgToInternet_WPF
             _serverIpEndPoint = new IPEndPoint(_serverIp, _serverPort);
         }
 
-        //метод не сильно связан с остальным классом, стоит доработать
-        public void FindServer()
-        {
-            if (ServerIp != null)
-            {
-                string[] ipOctetsStr = ServerIp.Split('.');
-
-                int variableOctet = Convert.ToInt32(ipOctetsStr[3]);
-
-                for (int i = 0; i < 255; i++)
-                {
-                    string searchIpServerString = String.Format("{0:s}.{1:s}.{2:s}.{3:D}", ipOctetsStr[0], ipOctetsStr[1], ipOctetsStr[2], i);
-                    ServerIp = searchIpServerString;
-
-                    if (TryPing(searchIpServerString, 8000, 100))
-                    {
-                        string logString = String.Format("tried ip {0:s} - FOUND!", searchIpServerString);
-
-                        loger.Print(logString);
-
-
-                        //break;
-                    }
-                    else
-                    {
-                        string logString = String.Format("tried ip {0:s} - fail!", searchIpServerString);
-                        loger.Print(logString);
-                    }
-
-                }
-            }
-        }
-
-        public bool TryPing(string strIpAddress, int intPort, int nTimeoutMsec)
-        {
-            Socket socket = null;
-            try
-            {
-                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.DontLinger, false);
-
-
-                IAsyncResult result = socket.BeginConnect(strIpAddress, intPort, null, null);
-                bool success = result.AsyncWaitHandle.WaitOne(nTimeoutMsec, true);
-
-                return socket.Connected;
-            }
-            catch
-            {
-                return false;
-            }
-            finally
-            {
-                if (null != socket)
-                    socket.Close();
-            }
-        }
         public int ServerPort
         {
             get

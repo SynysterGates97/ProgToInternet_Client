@@ -43,7 +43,7 @@ namespace ProgToInternet_WPF
                 if(_client.ConnectSocket())
                 {
                     string timeString = DateTime.Now.ToString();
-                    logListBox.Items.Add("["+timeString + "]: " + " connected to server " + _client.ServerIp.ToString());
+                    logListBox.Items.Add("["+timeString + "]: " + " connected to " + _client.ServerIp.ToString());
                 }
             }
             catch(Exception E)
@@ -61,13 +61,15 @@ namespace ProgToInternet_WPF
 
             if(_client.SendAndGetResponse(ref messageToServer, ref rxBuf))
             {
-                string logString = String.Format("{0:s} \"{1:s}\" is sent to {2:s}", GetDateWithLogFormat(), textBox1.Text, _client.ServerIp.ToString());
+                string logString = String.Format("{0:s} \"{1:s}\" >> {2:s}", GetDateWithLogFormat(), textBox1.Text, _client.ServerIp.ToString());
 
                 logListBox.Items.Add(logString);
 
                 string serverResponse = Encoding.UTF8.GetString(rxBuf, 0, rxBuf.Count());
 
-                logString = String.Format("{0:s} response from {2:s} is \"{1:s}\"", GetDateWithLogFormat(), serverResponse, _client.ServerIp.ToString());
+                serverResponse = serverResponse.Substring(0, serverResponse.IndexOf('\0'));
+
+                logString = String.Format("{0:s} {1:s} << {2:s}", GetDateWithLogFormat(), serverResponse, _client.ServerIp.ToString());
                 logListBox.Items.Add(logString);
 
 
