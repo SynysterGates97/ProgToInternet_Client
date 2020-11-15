@@ -75,16 +75,5 @@ namespace ProgToInternet_WPF
             _client.CloseSocket();
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Время подбора около 30 секунд. Нажимте \"ОК\"");
-
-            string logString = String.Format("{0:s} Начата процедура поиска сервера - Интерфейс заблокирован на ~30 сек", GetDateWithLogFormat());
-            logListBox.Items.Add(logString);
-            
-            Client findServerClient = new Client(logListBox, 8000) { ServerIp = HackIpServerTextBox.Text };
-
-            findServerClient.FindServer();
-        }
     }
 }

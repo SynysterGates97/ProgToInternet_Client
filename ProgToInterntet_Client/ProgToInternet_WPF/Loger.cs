@@ -25,6 +25,8 @@ namespace ProgToInternet_WPF
         public void Print(string message)
         {
             string logString = GetDateWithLogFormat() + message;
+            ListBoxItem listBoxItem = new ListBoxItem();
+
             logerListBox.Items.Add(logString);
             logerListBox.ItemsSource = logerListBox.ItemsSource;
         }

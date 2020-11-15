@@ -8,8 +8,6 @@ using System.Net;
 using System.Windows;
 using System.ComponentModel;
 using System.Windows.Controls;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ProgToInternet_WPF
 {
